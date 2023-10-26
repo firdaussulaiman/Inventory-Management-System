@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const User = require("../models/assetModel");
+const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const Token = require("../models/tokenModel");
@@ -102,7 +102,9 @@ const loginUser = asyncHandler(async (req, res) => {
   });
 }
   if (user && passwordIsCorrect) {
+
     const { _id, name, email, phone, } = user;
+
     res.status(200).json({
       _id,
       name,
@@ -133,13 +135,15 @@ const getUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
+
     const { _id, name, email, phone, } = user;
+
     res.status(200).json({
       _id,
       name,
       email,
       phone,
-    
+
     });
   } else {
     res.status(400);
@@ -166,7 +170,9 @@ const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
+
     const { name, email, phone, } = user;
+
     user.email = email;
     user.name = req.body.name || name;
     user.phone = req.body.phone || phone;
@@ -228,7 +234,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
     await token.deleteOne();
   }
 
-  // Create Reste Token
+  // Create Reset Token
   let resetToken = crypto.randomBytes(32).toString("hex") + user._id;
   console.log(resetToken);
 
