@@ -14,9 +14,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import { getLoginStatus } from "./services/authService";
 import { SET_LOGIN } from "./redux/features/auth/authSlice";
-import AddProduct from "./pages/addProduct/AddProduct";
-import ProductDetail from "./components/product/productDetail/ProductDetail";
-import EditProduct from "./pages/editProduct/EditProduct";
+import AddAsset from "./pages/addAsset/AddAsset"; // Changed AddProduct to AddAsset
+import AssetDetail from "./components/asset/assetDetail/AssetDetail"; // Changed ProductDetail to AssetDetail
+import EditAsset from "./pages/editasset/Editasset"; // Changed EditProduct to EditAsset
 import Profile from "./pages/profile/Profile";
 import EditProfile from "./pages/profile/EditProfile";
 import Contact from "./pages/contact/Contact";
@@ -55,31 +55,31 @@ function App() {
           }
         />
         <Route
-          path="/add-product"
+          path="/add-asset" // Changed add-product to add-asset
           element={
             <Sidebar>
               <Layout>
-                <AddProduct />
+                <AddAsset />
               </Layout>
             </Sidebar>
           }
         />
         <Route
-          path="/product-detail/:id"
+          path="/asset-detail/:id" // Changed product-detail to asset-detail
           element={
             <Sidebar>
               <Layout>
-                <ProductDetail />
+                <AssetDetail />
               </Layout>
             </Sidebar>
           }
         />
         <Route
-          path="/edit-product/:id"
+          path="/edit-asset/:id" // Changed edit-product to edit-asset
           element={
             <Sidebar>
               <Layout>
-                <EditProduct />
+                <EditAsset />
               </Layout>
             </Sidebar>
           }

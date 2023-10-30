@@ -1,23 +1,23 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ProductList from "../../components/product/productList/ProductList";
-import ProductSummary from "../../components/product/productSummary/ProductSummary";
+import AssetList from "../../components/asset/assetList/AssetList"; // Change "product" to "asset"
+import AssetSummary from "../../components/asset/assetSummary/AssetSummary"; // Change "product" to "asset"
 import useRedirectLoggedOutUser from "../../customHook/useRedirectLoggedOutUser";
 import { selectIsLoggedIn } from "../../redux/features/auth/authSlice";
-import { getProducts } from "../../redux/features/product/productSlice";
+import { getAssets } from "../../redux/features/asset/assetSlice"; // Change "getProducts" to "getAssets"
 
 const Dashboard = () => {
   useRedirectLoggedOutUser("/login");
   const dispatch = useDispatch();
 
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const { products, isLoading, isError, message } = useSelector(
-    (state) => state.product
+  const { assets, isLoading, isError, message } = useSelector(
+    (state) => state.asset // Change "product" to "asset"
   );
 
   useEffect(() => {
     if (isLoggedIn === true) {
-      dispatch(getProducts());
+      dispatch(getAssets()); // Change "getProducts" to "getAssets"
     }
 
     if (isError) {
@@ -27,8 +27,8 @@ const Dashboard = () => {
 
   return (
     <div>
-      <ProductSummary products={products} />
-      <ProductList products={products} isLoading={isLoading} />
+      <AssetSummary assets={assets} /> 
+      <AssetList assets={assets} isLoading={isLoading} /> 
     </div>
   );
 };

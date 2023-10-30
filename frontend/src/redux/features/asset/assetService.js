@@ -2,42 +2,44 @@ import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-const API_URL = `${BACKEND_URL}/api/products/`;
+const API_URL = `${BACKEND_URL}/api/assets/`; // Change "products" to "assets"
 
-// Create New Product
-const createProduct = async (formData) => {
+// Create New Asset
+const createAsset = async (formData) => {
   const response = await axios.post(API_URL, formData);
   return response.data;
 };
 
-// Get all products
-const getProducts = async () => {
+// Get all assets
+const getAssets = async () => {
   const response = await axios.get(API_URL);
   return response.data;
 };
 
-// Delete a Product
-const deleteProduct = async (id) => {
+// Delete an Asset
+const deleteAsset = async (id) => {
   const response = await axios.delete(API_URL + id);
   return response.data;
 };
-// Get a Product
-const getProduct = async (id) => {
+
+// Get an Asset
+const getAsset = async (id) => {
   const response = await axios.get(API_URL + id);
   return response.data;
 };
-// Update Product
-const updateProduct = async (id, formData) => {
+
+// Update Asset
+const updateAsset = async (id, formData) => {
   const response = await axios.patch(`${API_URL}${id}`, formData);
   return response.data;
 };
 
-const productService = {
-  createProduct,
-  getProducts,
-  getProduct,
-  deleteProduct,
-  updateProduct,
+const assetService = {
+  createAsset,
+  getAssets,
+  getAsset,
+  deleteAsset,
+  updateAsset,
 };
 
-export default productService;
+export default assetService;

@@ -25,7 +25,7 @@ const EditProfile = () => {
     name: user?.name,
     email: user?.email,
     phone: user?.phone,
-    bio: user?.bio,
+
   };
   const [profile, setProfile] = useState(initialState);
 
@@ -42,8 +42,7 @@ const EditProfile = () => {
       const formData = {
         name: profile.name,
         phone: profile.phone,
-        bio: profile.bio,
-        // Remove the photo field from the formData
+
       };
 
       const data = await updateUser(formData);
@@ -88,16 +87,6 @@ const EditProfile = () => {
                 value={profile?.phone}
                 onChange={handleInputChange}
               />
-            </p>
-            <p>
-              <label>Bio:</label>
-              <textarea
-                name="bio"
-                value={profile?.bio}
-                onChange={handleInputChange}
-                cols="30"
-                rows="10"
-              ></textarea>
             </p>
             <div>
               <button className="--btn --btn-primary">Edit Profile</button>

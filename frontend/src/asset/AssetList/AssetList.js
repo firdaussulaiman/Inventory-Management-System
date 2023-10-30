@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { SpinnerImg } from "../../loader/Loader";
-import "./productList.scss";
+import "./assetList.scss";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { AiOutlineEye } from "react-icons/ai";
 import Search from "../../search/Search";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  FILTER_PRODUCTS,
-  selectFilteredPoducts,
-} from "../../../redux/features/product/filterSlice";
+  FILTER_ASSETS,
+  selectFilteredAssets,
+} from "../../../redux/features/asset/filterSlice";
 import ReactPaginate from "react-paginate";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import {
-  deleteProduct,
-  getProducts,
-} from "../../../redux/features/product/productSlice";
+  deleteAsset,
+  getAssets,
+} from "../../../redux/features/asset/assetSlice";
 import { Link } from "react-router-dom";
 
-const ProductList = ({ products, isLoading }) => {
+const AssetList = ({ assets, isLoading }) => {
   const [search, setSearch] = useState("");
-  const filteredProducts = useSelector(selectFilteredPoducts);
+  const filteredAssets = useSelector(selectFilteredAssets);
 
   const dispatch = useDispatch();
 
@@ -32,30 +32,29 @@ const ProductList = ({ products, isLoading }) => {
     return text;
   };
 
-  const delProduct = async (id) => {
+  const delAsset = async (id) => {
     console.log(id);
-    await dispatch(deleteProduct(id));
-    await dispatch(getProducts());
+    await dispatch(deleteAsset(id));
+    await dispatch(getAssets());
   };
 
   const confirmDelete = (id) => {
     confirmAlert({
-      title: "Delete Product",
-      message: "Are you sure you want to delete this product.",
+      title: "Delete Asset",
+      message: "Are you sure you want to delete this asset.",
       buttons: [
         {
           label: "Delete",
-          onClick: () => delProduct(id),
+          onClick: () => delAsset(id),
         },
         {
           label: "Cancel",
-          // onClick: () => alert('Click No')
         },
       ],
     });
   };
 
-  //   Begin Pagination
+  // Begin Pagination
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
@@ -64,22 +63,22 @@ const ProductList = ({ products, isLoading }) => {
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
 
-    setCurrentItems(filteredProducts.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(filteredProducts.length / itemsPerPage));
-  }, [itemOffset, itemsPerPage, filteredProducts]);
+    setCurrentItems(filteredAssets.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(filteredAssets.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, filteredAssets]);
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % filteredProducts.length;
+    const newOffset = (event.selected * itemsPerPage) % filteredAssets.length;
     setItemOffset(newOffset);
   };
-  //   End Pagination
+  // End Pagination
 
   useEffect(() => {
-    dispatch(FILTER_PRODUCTS({ products, search }));
-  }, [products, search, dispatch]);
+    dispatch(FILTER_ASSETS({ assets, search }));
+  }, [assets, search, dispatch]);
 
   return (
-    <div className="product-list">
+    <div className="asset-list">
       <hr />
       <div className="table">
         <div className="--flex-between --flex-dir-column">
@@ -97,8 +96,8 @@ const ProductList = ({ products, isLoading }) => {
         {isLoading && <SpinnerImg />}
 
         <div className="table">
-          {!isLoading && products.length === 0 ? (
-            <p>-- No product found, please add a product...</p>
+          {!isLoading && assets.length === 0 ? (
+            <p>-- No asset found, please add an asset...</p>
           ) : (
             <table>
               <thead>
@@ -114,8 +113,8 @@ const ProductList = ({ products, isLoading }) => {
               </thead>
 
               <tbody>
-                {currentItems.map((product, index) => {
-                  const { _id, name, category, price, quantity } = product;
+                {currentItems.map((asset, index) => {
+                  const { _id, name, category, price, quantity } = asset;
                   return (
                     <tr key={_id}>
                       <td>{index + 1}</td>
@@ -132,12 +131,12 @@ const ProductList = ({ products, isLoading }) => {
                       </td>
                       <td className="icons">
                         <span>
-                          <Link to={`/product-detail/${_id}`}>
+                          <Link to={`/asset-detail/${_id}`}>
                             <AiOutlineEye size={25} color={"purple"} />
                           </Link>
                         </span>
                         <span>
-                          <Link to={`/edit-product/${_id}`}>
+                          <Link to={`/edit-asset/${_id}`}>
                             <FaEdit size={20} color={"green"} />
                           </Link>
                         </span>
@@ -175,4 +174,4 @@ const ProductList = ({ products, isLoading }) => {
   );
 };
 
-export default ProductList;
+export default AssetList;

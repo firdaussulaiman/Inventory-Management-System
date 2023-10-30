@@ -48,9 +48,6 @@ const Profile = () => {
               <p>
                 <b>Phone : </b> {profile?.phone}
               </p>
-              <p>
-                <b>Bio : </b> {profile?.bio}
-              </p>
            
               <div>
                 <Link to="/edit-profile">

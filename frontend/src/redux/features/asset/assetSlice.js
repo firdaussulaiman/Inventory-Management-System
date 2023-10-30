@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import productService from "./productService";
+import assetService from "./assetService"; // Import the asset service
 import { toast } from "react-toastify";
 
 const initialState = {
-  product: null,
-  products: [],
+  asset: null, // Change "product" to "asset"
+  assets: [], // Change "products" to "assets"
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -14,12 +14,12 @@ const initialState = {
   category: [],
 };
 
-// Create New Product
-export const createProduct = createAsyncThunk(
-  "products/create",
+// Create New Asset
+export const createAsset = createAsyncThunk(
+  "assets/create", // Change "products" to "assets"
   async (formData, thunkAPI) => {
     try {
-      return await productService.createProduct(formData);
+      return await assetService.createAsset(formData); // Change "product" to "asset"
     } catch (error) {
       const message =
         (error.response &&
@@ -33,12 +33,12 @@ export const createProduct = createAsyncThunk(
   }
 );
 
-// Get all products
-export const getProducts = createAsyncThunk(
-  "products/getAll",
+// Get all assets
+export const getAssets = createAsyncThunk(
+  "assets/getAll", // Change "products" to "assets"
   async (_, thunkAPI) => {
     try {
-      return await productService.getProducts();
+      return await assetService.getAssets(); // Change "product" to "asset"
     } catch (error) {
       const message =
         (error.response &&
@@ -52,12 +52,12 @@ export const getProducts = createAsyncThunk(
   }
 );
 
-// Delete a Product
-export const deleteProduct = createAsyncThunk(
-  "products/delete",
+// Delete an Asset
+export const deleteAsset = createAsyncThunk(
+  "assets/delete", // Change "products" to "assets"
   async (id, thunkAPI) => {
     try {
-      return await productService.deleteProduct(id);
+      return await assetService.deleteAsset(id); // Change "product" to "asset"
     } catch (error) {
       const message =
         (error.response &&
@@ -71,12 +71,12 @@ export const deleteProduct = createAsyncThunk(
   }
 );
 
-// Get a product
-export const getProduct = createAsyncThunk(
-  "products/getProduct",
+// Get an Asset
+export const getAsset = createAsyncThunk(
+  "assets/getAsset", // Change "products" to "assets"
   async (id, thunkAPI) => {
     try {
-      return await productService.getProduct(id);
+      return await assetService.getAsset(id); // Change "product" to "asset"
     } catch (error) {
       const message =
         (error.response &&
@@ -89,12 +89,13 @@ export const getProduct = createAsyncThunk(
     }
   }
 );
-// Update product
-export const updateProduct = createAsyncThunk(
-  "products/updateProduct",
+
+// Update Asset
+export const updateAsset = createAsyncThunk(
+  "assets/updateAsset", // Change "products" to "assets"
   async ({ id, formData }, thunkAPI) => {
     try {
-      return await productService.updateProduct(id, formData);
+      return await assetService.updateAsset(id, formData); // Change "product" to "asset"
     } catch (error) {
       const message =
         (error.response &&
@@ -108,17 +109,17 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
-const productSlice = createSlice({
-  name: "product",
+const assetSlice = createSlice({
+  name: "asset", // Change "product" to "asset"
   initialState,
   reducers: {
     CALC_STORE_VALUE(state, action) {
-      const products = action.payload;
+      const assets = action.payload; // Change "products" to "assets"
       const array = [];
-      products.map((item) => {
+      assets.map((item) => {
         const { price, quantity } = item;
-        const productValue = price * quantity;
-        return array.push(productValue);
+        const assetValue = price * quantity; // Change "product" to "asset"
+        return array.push(assetValue);
       });
       const totalValue = array.reduce((a, b) => {
         return a + b;
@@ -126,11 +127,10 @@ const productSlice = createSlice({
       state.totalStoreValue = totalValue;
     },
     CALC_OUTOFSTOCK(state, action) {
-      const products = action.payload;
+      const assets = action.payload; // Change "products" to "assets"
       const array = [];
-      products.map((item) => {
+      assets.map((item) => {
         const { quantity } = item;
-
         return array.push(quantity);
       });
       let count = 0;
@@ -142,11 +142,10 @@ const productSlice = createSlice({
       state.outOfStock = count;
     },
     CALC_CATEGORY(state, action) {
-      const products = action.payload;
+      const assets = action.payload; // Change "products" to "assets"
       const array = [];
-      products.map((item) => {
+      assets.map((item) => {
         const { category } = item;
-
         return array.push(category);
       });
       const uniqueCategory = [...new Set(array)];
@@ -155,94 +154,79 @@ const productSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createProduct.pending, (state) => {
+      .addCase(createAsset.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createProduct.fulfilled, (state, action) => {
+      .addCase(createAsset.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
         console.log(action.payload);
-        state.products.push(action.payload);
-        toast.success("Product added successfully");
+        state.assets.push(action.payload); // Change "products" to "assets"
+        toast.success("Asset added successfully"); // Change "Product" to "Asset"
       })
-      .addCase(createProduct.rejected, (state, action) => {
+      .addCase(createAsset.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
       })
-      .addCase(getProducts.pending, (state) => {
+      .addCase(getAssets.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getProducts.fulfilled, (state, action) => {
+      .addCase(getAssets.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
         console.log(action.payload);
-        state.products = action.payload;
+        state.assets = action.payload; // Change "products" to "assets"
       })
-      .addCase(getProducts.rejected, (state, action) => {
+      .addCase(getAssets.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
       })
-      .addCase(deleteProduct.pending, (state) => {
+      .addCase(deleteAsset.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(deleteProduct.fulfilled, (state, action) => {
+      .addCase(deleteAsset.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        toast.success("Product deleted successfully");
+        toast.success("Asset deleted successfully"); // Change "Product" to "Asset"
       })
-      .addCase(deleteProduct.rejected, (state, action) => {
+      .addCase(deleteAsset.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
       })
-      .addCase(getProduct.pending, (state) => {
+      .addCase(getAsset.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getProduct.fulfilled, (state, action) => {
+      .addCase(getAsset.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.product = action.payload;
+        state.asset = action.payload; // Change "product" to "asset"
       })
-      .addCase(getProduct.rejected, (state, action) => {
+      .addCase(getAsset.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
       })
-      .addCase(updateProduct.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(updateProduct.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.isError = false;
-        toast.success("Product updated successfully");
-      })
-      .addCase(updateProduct.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-        toast.error(action.payload);
-      });
   },
 });
 
 export const { CALC_STORE_VALUE, CALC_OUTOFSTOCK, CALC_CATEGORY } =
-  productSlice.actions;
+  assetSlice.actions;
 
-export const selectIsLoading = (state) => state.product.isLoading;
-export const selectProduct = (state) => state.product.product;
-export const selectTotalStoreValue = (state) => state.product.totalStoreValue;
-export const selectOutOfStock = (state) => state.product.outOfStock;
-export const selectCategory = (state) => state.product.category;
+export const selectIsLoading = (state) => state.asset.isLoading;
+export const selectProduct = (state) => state.asset.asset;
+export const selectTotalStoreValue = (state) => state.asset.totalStoreValue;
+export const selectOutOfStock = (state) => state.asset.outOfStock;
+export const selectCategory = (state) => state.asset.category;
 
-export default productSlice.reducer;
+export default assetSlice.reducer;
