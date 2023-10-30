@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const protect = asyncHandler(async (req, res, next) => {
   try {
     const token = req.cookies.token;
+    console.log("Token:", token);
     if (!token) {
       res.status(401);
       throw new Error("Not authorized, please login");
@@ -20,6 +21,7 @@ const protect = asyncHandler(async (req, res, next) => {
       throw new Error("User not found");
     }
     req.user = user;
+    console.log("req.user:", req.user);
     next();
   } catch (error) {
     res.status(401);
