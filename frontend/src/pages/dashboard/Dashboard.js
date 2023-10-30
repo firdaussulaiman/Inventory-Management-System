@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import AssetList from "../../components/asset/assetList/AssetList"; // Change "product" to "asset"
-import AssetSummary from "../../components/asset/assetSummary/AssetSummary"; // Change "product" to "asset"
+import AssetList from "../../components/asset/AssetList/AssetList"; 
+import AssetSummary from "../../components/asset/AssetSummary/AssetSummary"; 
 import useRedirectLoggedOutUser from "../../customHook/useRedirectLoggedOutUser";
 import { selectIsLoggedIn } from "../../redux/features/auth/authSlice";
-import { getAssets } from "../../redux/features/asset/assetSlice"; // Change "getProducts" to "getAssets"
+import { getAssets } from "../../redux/features/asset/assetSlice"; 
 
 const Dashboard = () => {
   useRedirectLoggedOutUser("/login");
@@ -12,12 +12,12 @@ const Dashboard = () => {
 
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const { assets, isLoading, isError, message } = useSelector(
-    (state) => state.asset // Change "product" to "asset"
+    (state) => state.asset
   );
 
   useEffect(() => {
     if (isLoggedIn === true) {
-      dispatch(getAssets()); // Change "getProducts" to "getAssets"
+      dispatch(getAssets());
     }
 
     if (isError) {

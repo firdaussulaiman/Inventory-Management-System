@@ -15,7 +15,7 @@ import { useDispatch } from "react-redux";
 import { getLoginStatus } from "./services/authService";
 import { SET_LOGIN } from "./redux/features/auth/authSlice";
 import AddAsset from "./pages/addAsset/AddAsset"; // Changed AddProduct to AddAsset
-import AssetDetail from "./components/asset/assetDetail/AssetDetail"; // Changed ProductDetail to AssetDetail
+import AssetDetail from "./components/asset/AssetDetail/AssetDetail"; // Changed ProductDetail to AssetDetail
 import EditAsset from "./pages/editasset/Editasset"; // Changed EditProduct to EditAsset
 import Profile from "./pages/profile/Profile";
 import EditProfile from "./pages/profile/EditProfile";

@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import assetService from "./assetService"; // Import the asset service
+import assetService from "./assetService"; 
 import { toast } from "react-toastify";
 
 const initialState = {
-  asset: null, // Change "product" to "asset"
-  assets: [], // Change "products" to "assets"
+  asset: null, 
+  assets: [], 
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -16,10 +16,10 @@ const initialState = {
 
 // Create New Asset
 export const createAsset = createAsyncThunk(
-  "assets/create", // Change "products" to "assets"
+  "assets/create", 
   async (formData, thunkAPI) => {
     try {
-      return await assetService.createAsset(formData); // Change "product" to "asset"
+      return await assetService.createAsset(formData);
     } catch (error) {
       const message =
         (error.response &&
@@ -110,15 +110,15 @@ export const updateAsset = createAsyncThunk(
 );
 
 const assetSlice = createSlice({
-  name: "asset", // Change "product" to "asset"
+  name: "asset", 
   initialState,
   reducers: {
     CALC_STORE_VALUE(state, action) {
-      const assets = action.payload; // Change "products" to "assets"
+      const assets = action.payload; 
       const array = [];
       assets.map((item) => {
         const { price, quantity } = item;
-        const assetValue = price * quantity; // Change "product" to "asset"
+        const assetValue = price * quantity; 
         return array.push(assetValue);
       });
       const totalValue = array.reduce((a, b) => {
@@ -127,7 +127,7 @@ const assetSlice = createSlice({
       state.totalStoreValue = totalValue;
     },
     CALC_OUTOFSTOCK(state, action) {
-      const assets = action.payload; // Change "products" to "assets"
+      const assets = action.payload; 
       const array = [];
       assets.map((item) => {
         const { quantity } = item;
@@ -142,7 +142,7 @@ const assetSlice = createSlice({
       state.outOfStock = count;
     },
     CALC_CATEGORY(state, action) {
-      const assets = action.payload; // Change "products" to "assets"
+      const assets = action.payload; 
       const array = [];
       assets.map((item) => {
         const { category } = item;
@@ -162,8 +162,8 @@ const assetSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
         console.log(action.payload);
-        state.assets.push(action.payload); // Change "products" to "assets"
-        toast.success("Asset added successfully"); // Change "Product" to "Asset"
+        state.assets.push(action.payload); 
+        toast.success("Asset added successfully");
       })
       .addCase(createAsset.rejected, (state, action) => {
         state.isLoading = false;
@@ -179,7 +179,7 @@ const assetSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
         console.log(action.payload);
-        state.assets = action.payload; // Change "products" to "assets"
+        state.assets = action.payload;
       })
       .addCase(getAssets.rejected, (state, action) => {
         state.isLoading = false;
@@ -224,7 +224,7 @@ export const { CALC_STORE_VALUE, CALC_OUTOFSTOCK, CALC_CATEGORY } =
   assetSlice.actions;
 
 export const selectIsLoading = (state) => state.asset.isLoading;
-export const selectProduct = (state) => state.asset.asset;
+export const selectAsset = (state) => state.asset.asset;
 export const selectTotalStoreValue = (state) => state.asset.totalStoreValue;
 export const selectOutOfStock = (state) => state.asset.outOfStock;
 export const selectCategory = (state) => state.asset.category;
