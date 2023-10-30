@@ -8,7 +8,13 @@ const sendEmail = require("../utils/sendEmail");
 
 // Generate Token
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+  try {
+    const token = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    return token;
+  } catch (error) {
+    // Handle the error, you can log it or throw it to the caller
+    throw new Error("Token creation failed: " + error.message);
+  }
 };
 
 // Register User
@@ -142,7 +148,10 @@ const getUser = asyncHandler(async (req, res) => {
       _id,
       name,
       email,
+      photo,
       phone,
+      bio,
+    
 
     });
   } else {

@@ -10,6 +10,7 @@ const errorHandler = require("./middleware/errorMiddleware");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
+console.log(process.env.JWT_SECRET);
 const app = express();
 
 // Middlewares
@@ -17,17 +18,22 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  })
+);
 
 
 // Routes Middleware
 app.use("/api/users", userRoute);
-app.use("/api/assets", assetRoute); // Changed 'productRoute' to 'assetRoute'
+app.use("/api/assets", assetRoute); 
 app.use("/api/contactus", contactRoute);
 
 // Routes
 app.get("/", (req, res) => {
-  res.send("Home Page");
+  res.send("MainPage");
 });
 
 // Error Middleware
