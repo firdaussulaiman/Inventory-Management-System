@@ -55,7 +55,7 @@ function App() {
           }
         />
         <Route
-          path="/add-asset" // Changed add-product to add-asset
+          path="/add-asset" 
           element={
             <Sidebar>
               <Layout>
@@ -65,7 +65,7 @@ function App() {
           }
         />
         <Route
-          path="/asset-detail/:id" // Changed product-detail to asset-detail
+          path="/asset-detail/:id" 
           element={
             <Sidebar>
               <Layout>
@@ -75,7 +75,7 @@ function App() {
           }
         />
         <Route
-          path="/edit-asset/:id" // Changed edit-product to edit-asset
+          path="/edit-asset/:id" 
           element={
             <Sidebar>
               <Layout>

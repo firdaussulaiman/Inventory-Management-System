@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { NavLink } from "react-router-dom";
+import "./Sidebar.scss";
 
 const activeLink = ({ isActive }) => (isActive ? "active" : "link");
 const activeSublink = ({ isActive }) => (isActive ? "active" : "link");

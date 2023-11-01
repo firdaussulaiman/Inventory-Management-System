@@ -5,6 +5,7 @@ import AssetSummary from "../../components/asset/AssetSummary/AssetSummary";
 import useRedirectLoggedOutUser from "../../customHook/useRedirectLoggedOutUser";
 import { selectIsLoggedIn } from "../../redux/features/auth/authSlice";
 import { getAssets } from "../../redux/features/asset/assetSlice"; 
+import Header from "../../components/header/Header";
 
 const Dashboard = () => {
   useRedirectLoggedOutUser("/login");
@@ -14,21 +15,22 @@ const Dashboard = () => {
   const { assets, isLoading, isError, message } = useSelector(
     (state) => state.asset
   );
-
   useEffect(() => {
     if (isLoggedIn === true) {
       dispatch(getAssets());
     }
 
     if (isError) {
-      console.log(message);
+      console.log("Error message:", message); 
     }
   }, [isLoggedIn, isError, message, dispatch]);
 
   return (
     <div>
-      <AssetSummary assets={assets} /> 
+          <Header />
       <AssetList assets={assets} isLoading={isLoading} /> 
+      <AssetSummary assets={assets} /> 
+     
     </div>
   );
 };

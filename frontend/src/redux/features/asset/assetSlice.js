@@ -9,7 +9,6 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
-  totalStoreValue: 0,
   outOfStock: 0,
   category: [],
 };
@@ -19,8 +18,11 @@ export const createAsset = createAsyncThunk(
   "assets/create", 
   async (formData, thunkAPI) => {
     try {
-      return await assetService.createAsset(formData);
+      const response = await assetService.createAsset(formData);
+      console.log("Asset creation response:", response);
+      return response;
     } catch (error) {
+      console.log("Error in asset creation:", error);
       const message =
         (error.response &&
           error.response.data &&
@@ -35,10 +37,10 @@ export const createAsset = createAsyncThunk(
 
 // Get all assets
 export const getAssets = createAsyncThunk(
-  "assets/getAll", // Change "products" to "assets"
+  "assets/getAll",
   async (_, thunkAPI) => {
     try {
-      return await assetService.getAssets(); // Change "product" to "asset"
+      return await assetService.getAssets();  
     } catch (error) {
       const message =
         (error.response &&
@@ -54,10 +56,10 @@ export const getAssets = createAsyncThunk(
 
 // Delete an Asset
 export const deleteAsset = createAsyncThunk(
-  "assets/delete", // Change "products" to "assets"
+  "assets/delete",
   async (id, thunkAPI) => {
     try {
-      return await assetService.deleteAsset(id); // Change "product" to "asset"
+      return await assetService.deleteAsset(id);
     } catch (error) {
       const message =
         (error.response &&
@@ -113,19 +115,7 @@ const assetSlice = createSlice({
   name: "asset", 
   initialState,
   reducers: {
-    CALC_STORE_VALUE(state, action) {
-      const assets = action.payload; 
-      const array = [];
-      assets.map((item) => {
-        const { price, quantity } = item;
-        const assetValue = price * quantity; 
-        return array.push(assetValue);
-      });
-      const totalValue = array.reduce((a, b) => {
-        return a + b;
-      }, 0);
-      state.totalStoreValue = totalValue;
-    },
+  
     CALC_OUTOFSTOCK(state, action) {
       const assets = action.payload; 
       const array = [];
@@ -194,7 +184,7 @@ const assetSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        toast.success("Asset deleted successfully"); // Change "Product" to "Asset"
+        toast.success("Asset deleted successfully"); 
       })
       .addCase(deleteAsset.rejected, (state, action) => {
         state.isLoading = false;
@@ -209,7 +199,7 @@ const assetSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.asset = action.payload; // Change "product" to "asset"
+        state.asset = action.payload;
       })
       .addCase(getAsset.rejected, (state, action) => {
         state.isLoading = false;
@@ -220,12 +210,11 @@ const assetSlice = createSlice({
   },
 });
 
-export const { CALC_STORE_VALUE, CALC_OUTOFSTOCK, CALC_CATEGORY } =
+export const {  CALC_OUTOFSTOCK, CALC_CATEGORY } =
   assetSlice.actions;
 
 export const selectIsLoading = (state) => state.asset.isLoading;
 export const selectAsset = (state) => state.asset.asset;
-export const selectTotalStoreValue = (state) => state.asset.totalStoreValue;
 export const selectOutOfStock = (state) => state.asset.outOfStock;
 export const selectCategory = (state) => state.asset.category;
 

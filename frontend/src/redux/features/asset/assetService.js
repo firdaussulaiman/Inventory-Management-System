@@ -4,11 +4,15 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const API_URL = `${BACKEND_URL}/api/assets/`; // Change "products" to "assets"
 
-// Create New Asset
-const createAsset = async (formData) => {
-  const response = await axios.post(API_URL, formData);
+const createAsset = async (assetData) => {
+  const response = await axios.post(API_URL, assetData, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
   return response.data;
 };
+
 
 // Get all assets
 const getAssets = async () => {

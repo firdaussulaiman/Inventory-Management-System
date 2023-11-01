@@ -1,5 +1,4 @@
 import React from "react";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Card from "../../card/Card";
 
@@ -7,8 +6,6 @@ import "./AssetForm.scss";
 
 const AssetForm = ({
   asset,
-  description,
-  setDescription,
   handleInputChange,
   saveAsset,
 }) => {
@@ -78,15 +75,6 @@ const AssetForm = ({
             onChange={handleInputChange}
           />
 
-          <label>Asset Description:</label>
-          <ReactQuill
-            theme="snow"
-            value={description}
-            onChange={setDescription}
-            modules={AssetForm.modules}
-            formats={AssetForm.formats}
-          />
-
           <div className="--my">
             <button type="submit" className="--btn --btn-primary">
               Save Asset
@@ -98,40 +86,5 @@ const AssetForm = ({
   );
 };
 
-AssetForm.modules = {
-  toolbar: [
-    [{ header: "1" }, { header: "2" }, { font: [] }],
-    [{ size: [] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [{ align: [] }],
-    [{ color: [] }, { background: [] }],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    ["clean"],
-  ],
-};
-AssetForm.formats = [
-  "header",
-  "font",
-  "size",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "color",
-  "background",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-  "video",
-  "code-block",
-  "align",
-];
 
 export default AssetForm;

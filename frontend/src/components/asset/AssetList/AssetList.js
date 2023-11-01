@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { SpinnerImg } from "../../loader/Loader";
-import "./AssetList.scss";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { AiOutlineEye } from "react-icons/ai";
 import Search from "../../search/Search";
@@ -9,7 +8,7 @@ import {
   FILTER_ASSETS,
   selectFilteredAssets,
 } from "../../../redux/features/asset/filterSlice";
-import ReactPaginate from "react-paginate";
+import { DataGrid } from '@mui/x-data-grid';
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import {
@@ -17,23 +16,45 @@ import {
   getAssets,
 } from "../../../redux/features/asset/assetSlice";
 import { Link } from "react-router-dom";
+import "./AssetList.scss";
 
 const AssetList = ({ assets, isLoading }) => {
   const [search, setSearch] = useState("");
   const filteredAssets = useSelector(selectFilteredAssets);
-
   const dispatch = useDispatch();
 
-  const shortenText = (text, n) => {
-    if (text.length > n) {
-      const shortenedText = text.substring(0, n).concat("...");
-      return shortenedText;
-    }
-    return text;
-  };
+  const columns = [
+    { field: 'index', headerName: '#', width: 70 },
+    { field: 'Machine_Name', headerName: 'Machine Name', width: 130 },
+    { field: 'Machine_Type', headerName: 'Machine Type', width: 130 },
+    { field: 'Serial_Number', headerName: 'Serial Number', width: 130 },
+    { field: 'Machine_Manufacturer', headerName: 'Machine Manufacturer', width: 170 },
+    { field: 'Machine_Mac_Address', headerName: 'Machine MAC Address', width: 170 },
+    { field: 'User_Assigned', headerName: 'User Assigned', width: 130 },
+    { field: 'Warranty_Date', headerName: 'Warranty Date', width: 130 },
+    { 
+      field: 'actions', 
+      headerName: 'Actions', 
+      width: 200, 
+      renderCell: (params) => (
+        <>
+          <Link to={`/asset-detail/${params.row._id}`}>
+            <AiOutlineEye size={25} color={"purple"} />
+          </Link>
+          <Link to={`/edit-asset/${params.row._id}`}>
+            <FaEdit size={20} color={"green"} />
+          </Link>
+          <FaTrashAlt
+            size={20}
+            color={"red"}
+            onClick={() => confirmDelete(params.row._id)}
+          />
+        </>
+      )
+    },
+  ];
 
   const delAsset = async (id) => {
-    console.log(id);
     await dispatch(deleteAsset(id));
     await dispatch(getAssets());
   };
@@ -54,25 +75,6 @@ const AssetList = ({ assets, isLoading }) => {
     });
   };
 
-  // Begin Pagination
-  const [currentItems, setCurrentItems] = useState([]);
-  const [pageCount, setPageCount] = useState(0);
-  const [itemOffset, setItemOffset] = useState(0);
-  const itemsPerPage = 5;
-
-  useEffect(() => {
-    const endOffset = itemOffset + itemsPerPage;
-
-    setCurrentItems(filteredAssets.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(filteredAssets.length / itemsPerPage));
-  }, [itemOffset, itemsPerPage, filteredAssets]);
-
-  const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % filteredAssets.length;
-    setItemOffset(newOffset);
-  };
-  // End Pagination
-
   useEffect(() => {
     dispatch(FILTER_ASSETS({ assets, search }));
   }, [assets, search, dispatch]);
@@ -80,96 +82,34 @@ const AssetList = ({ assets, isLoading }) => {
   return (
     <div className="asset-list">
       <hr />
-      <div className="table">
-        <div className="--flex-between --flex-dir-column">
-          <span>
-            <h3>Inventory Items</h3>
-          </span>
-          <span>
-            <Search
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </span>
-        </div>
-
-        {isLoading && <SpinnerImg />}
-
-        <div className="table">
-          {!isLoading && assets.length === 0 ? (
-            <p>-- No asset found, please add an asset...</p>
-          ) : (
-            <table>
-              <thead>
-                <tr>
-                  <th>s/n</th>
-                  <th>Name</th>
-                  <th>Category</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Value</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {currentItems.map((asset, index) => {
-                  const { _id, name, category, price, quantity } = asset;
-                  return (
-                    <tr key={_id}>
-                      <td>{index + 1}</td>
-                      <td>{shortenText(name, 16)}</td>
-                      <td>{category}</td>
-                      <td>
-                        {"$"}
-                        {price}
-                      </td>
-                      <td>{quantity}</td>
-                      <td>
-                        {"$"}
-                        {price * quantity}
-                      </td>
-                      <td className="icons">
-                        <span>
-                          <Link to={`/asset-detail/${_id}`}>
-                            <AiOutlineEye size={25} color={"purple"} />
-                          </Link>
-                        </span>
-                        <span>
-                          <Link to={`/edit-asset/${_id}`}>
-                            <FaEdit size={20} color={"green"} />
-                          </Link>
-                        </span>
-                        <span>
-                          <FaTrashAlt
-                            size={20}
-                            color={"red"}
-                            onClick={() => confirmDelete(_id)}
-                          />
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
-        </div>
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel="Next"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={3}
-          pageCount={pageCount}
-          previousLabel="Prev"
-          renderOnZeroPageCount={null}
-          containerClassName="pagination"
-          pageLinkClassName="page-num"
-          previousLinkClassName="page-num"
-          nextLinkClassName="page-num"
-          activeLinkClassName="activePage"
+      <div className="table-header">
+        <h3>Asset list</h3>
+        <Search
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
+      
+      {isLoading && <SpinnerImg />}
+
+      {!isLoading && assets.length === 0 ? (
+        <p>-- No asset found, please add an asset...</p>
+      ) : (
+        <div style={{ height: 400, width: '100%' }}>
+          <DataGrid 
+            rows={filteredAssets.map((asset, index) => ({ ...asset, index: index + 1 }))}
+            columns={columns} 
+            getRowId={(row) => row._id}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 5 },
+              },
+            }}
+            pageSizeOptions={[5, 10]}
+            checkboxSelection
+          />
+        </div>
+      )}
     </div>
   );
 };

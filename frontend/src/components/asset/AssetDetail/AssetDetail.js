@@ -7,7 +7,7 @@ import { getAsset } from "../../../redux/features/asset/assetSlice";
 import Card from "../../card/Card";
 import { SpinnerImg } from "../../loader/Loader";
 import "./AssetDetail.scss";
-import DOMPurify from "dompurify";
+
 
 const AssetDetail = () => {
   useRedirectLoggedOutUser("/login");

@@ -10,12 +10,15 @@ const filterSlice = createSlice({
   reducers: {
     FILTER_ASSETS(state, action) {
       const { assets, search } = action.payload;
-      const tempAssets = assets.filter(
-        (asset) =>
-          asset.name.toLowerCase().includes(search.toLowerCase()) ||
-          asset.category.toLowerCase().includes(search.toLowerCase())
+      const lowercaseSearch = search.toLowerCase();
+    
+      const tempAssets = assets.filter((asset) => 
+        asset.Machine_Name.toLowerCase().includes(lowercaseSearch) ||
+        asset.Machine_Type.toLowerCase().includes(lowercaseSearch) ||
+        asset.Serial.toLowerCase().includes(lowercaseSearch) ||
+        asset.Machine_Manufacturer.toLowerCase().includes(lowercaseSearch)
       );
-
+    
       state.filteredAssets = tempAssets;
     },
   },

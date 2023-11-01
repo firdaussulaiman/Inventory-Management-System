@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/loader/Loader";
-import AssetForm from "../../components/asset/assetForm/AssetForm"; // Change "product" to "asset"
+import AssetForm from "../../components/asset/assetForm/AssetForm"; 
 import {
-  createAsset, // Change "createProduct" to "createAsset"
+  createAsset, 
   selectIsLoading,
-} from "../../redux/features/asset/assetSlice"; // Change "product" to "asset"
+} from "../../redux/features/asset/assetSlice"; 
 
 const initialState = {
   Machine_Name: "",
@@ -18,13 +18,10 @@ const initialState = {
   Warranty_Date: "",
 };
 
-const AddAsset = () => { // Change "AddProduct" to "AddAsset"
+const AddAsset = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [asset, setAsset] = useState(initialState); // Change "product" to "asset"
-  const [assetImage, setAssetImage] = useState(""); // Change "productImage" to "assetImage"
-  const [imagePreview, setImagePreview] = useState(null);
-  const [description, setDescription] = useState("");
+  const [asset, setAsset] = useState(initialState); 
 
   const isLoading = useSelector(selectIsLoading);
 
@@ -36,33 +33,28 @@ const AddAsset = () => { // Change "AddProduct" to "AddAsset"
     Machine_Mac_Address,
     User_Assigned,
     Warranty_Date,
-  } = asset; // Change "product" to "asset"
+  } = asset;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setAsset({ ...asset, [name]: value }); // Change "product" to "asset"
+    setAsset({ ...asset, [name]: value });
   };
 
-  const handleImageChange = (e) => {
-    setAssetImage(e.target.files[0]); // Change "productImage" to "assetImage"
-    setImagePreview(URL.createObjectURL(e.target.files[0]));
-  };
-
-  const saveAsset = async (e) => { // Change "saveProduct" to "saveAsset"
+  const saveAsset = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("Machine_Name", Machine_Name);
-    formData.append("Machine_Type", Machine_Type);
-    formData.append("Serial_Number", Serial_Number);
-    formData.append("Machine_Manufacturer", Machine_Manufacturer);
-    formData.append("Machine_Mac_Address", Machine_Mac_Address);
-    formData.append("User_Assigned", User_Assigned);
-    formData.append("Warranty_Date", Warranty_Date); // Assuming Warranty_Date is a date
-    formData.append("image", assetImage); // Change "productImage" to "assetImage"
+    const assetData = {
+      Machine_Name: Machine_Name,
+      Machine_Type: Machine_Type,
+      Serial_Number: Serial_Number,
+      Machine_Manufacturer: Machine_Manufacturer,
+      Machine_Mac_Address: Machine_Mac_Address,
+      User_Assigned: User_Assigned,
+      Warranty_Date: Warranty_Date,
+    };
 
-    console.log(...formData);
+    console.log("Asset Data to be sent:", assetData);
 
-    await dispatch(createAsset(formData)); // Change "createProduct" to "createAsset"
+    await dispatch(createAsset(assetData)); 
 
     navigate("/dashboard");
   };
@@ -71,18 +63,13 @@ const AddAsset = () => { // Change "AddProduct" to "AddAsset"
     <div>
       {isLoading && <Loader />}
       <h3 className="--mt">Add New Asset</h3> 
-      <AssetForm // Change "ProductForm" to "AssetForm"
-        asset={asset} // Change "product" to "asset"
-        assetImage={assetImage} // Change "productImage" to "assetImage"
-        imagePreview={imagePreview}
-        description={description}
-        setDescription={setDescription}
+      <AssetForm 
+        asset={asset} 
         handleInputChange={handleInputChange}
-        handleImageChange={handleImageChange}
-        saveAsset={saveAsset} // Change "saveProduct" to "saveAsset"
+        saveAsset={saveAsset}
       />
     </div>
   );
 };
 
-export default AddAsset; // Change "AddProduct" to "AddAsset"
+export default AddAsset;
