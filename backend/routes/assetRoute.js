@@ -9,7 +9,7 @@ const {
   updateAsset,
 } = require("../controllers/assetController");
 const multer = require("multer");
-const upload = multer(); // Use an empty multer configuration to handle file uploads
+const upload = multer();
 
 router.post("/", protect, createAsset);
 router.patch("/:id", protect, updateAsset);

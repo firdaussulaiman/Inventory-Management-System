@@ -38,12 +38,8 @@ const assetSchema = mongoose.Schema(
       trim: true,
     },
     Warranty_Date: {
-      type: Date, // Assuming Warranty_Date is a date
+      type: Date, 
       required: [true, "Please add a warranty date"],
-    },
-    image: {
-      type: Object,
-      default: {},
     },
   },
   {

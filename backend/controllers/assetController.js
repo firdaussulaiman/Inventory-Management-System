@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const Asset = require("../models/assetModel"); // Changed 'Product' to 'Asset'
+const Asset = require("../models/assetModel"); 
 
 
 // Create Asset
@@ -9,8 +9,10 @@ const createAsset = asyncHandler(async (req, res) => {
   // Validation
   if (!Machine_Name || !Machine_Type || !Serial_Number || !Machine_Manufacturer || !Machine_Mac_Address || !User_Assigned || !Warranty_Date) {
     res.status(400);
-    throw new Error("Please fill in all fields");
+    throw new Error("Machine_Name, Machine_Type, Serial_Number, Machine_Manufacturer, Machine_Mac_Address, User_Assigned, and Warranty_Date are required fields.");
+
   }
+  console.log(req.body);
 
   // Create Asset
   const asset = await Asset.create({
@@ -73,12 +75,12 @@ const updateAsset = asyncHandler(async (req, res) => {
 
   const asset = await Asset.findById(id); 
 
-  // If asset doesn't exist
+
   if (!asset) {
     res.status(404);
     throw new Error("Asset not found");
   }
-  // Match asset to its user
+
   if (asset.user.toString() !== req.user.id) {
     res.status(401);
     throw new Error("User not authorized");
