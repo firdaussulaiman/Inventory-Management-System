@@ -9,8 +9,8 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
-  outOfStock: 0,
-  category: [],
+  windowsAssetsCount: 0,
+  macintoshAssetsCount: 0,
 };
 
 // Create New Asset
@@ -18,11 +18,8 @@ export const createAsset = createAsyncThunk(
   "assets/create", 
   async (formData, thunkAPI) => {
     try {
-      const response = await assetService.createAsset(formData);
-      console.log("Asset creation response:", response);
-      return response;
+      return await assetService.createAsset(formData);
     } catch (error) {
-      console.log("Error in asset creation:", error);
       const message =
         (error.response &&
           error.response.data &&
@@ -75,10 +72,10 @@ export const deleteAsset = createAsyncThunk(
 
 // Get an Asset
 export const getAsset = createAsyncThunk(
-  "assets/getAsset", // Change "products" to "assets"
+  "assets/getAsset", 
   async (id, thunkAPI) => {
     try {
-      return await assetService.getAsset(id); // Change "product" to "asset"
+      return await assetService.getAsset(id); 
     } catch (error) {
       const message =
         (error.response &&
@@ -94,10 +91,10 @@ export const getAsset = createAsyncThunk(
 
 // Update Asset
 export const updateAsset = createAsyncThunk(
-  "assets/updateAsset", // Change "products" to "assets"
+  "assets/updateAsset", 
   async ({ id, formData }, thunkAPI) => {
     try {
-      return await assetService.updateAsset(id, formData); // Change "product" to "asset"
+      return await assetService.updateAsset(id, formData); 
     } catch (error) {
       const message =
         (error.response &&
@@ -116,30 +113,12 @@ const assetSlice = createSlice({
   initialState,
   reducers: {
   
-    CALC_OUTOFSTOCK(state, action) {
-      const assets = action.payload; 
-      const array = [];
-      assets.map((item) => {
-        const { quantity } = item;
-        return array.push(quantity);
-      });
-      let count = 0;
-      array.forEach((number) => {
-        if (number === 0 || number === "0") {
-          count += 1;
-        }
-      });
-      state.outOfStock = count;
+    CALC_WINDOWS_ASSETS(state, action) {
+      state.windowsAssetsCount = action.payload.filter(asset => asset.Machine_Manufacturer === 'Dell').length;
     },
-    CALC_CATEGORY(state, action) {
-      const assets = action.payload; 
-      const array = [];
-      assets.map((item) => {
-        const { category } = item;
-        return array.push(category);
-      });
-      const uniqueCategory = [...new Set(array)];
-      state.category = uniqueCategory;
+    CALC_MACINTOSH_ASSETS(state, action) {
+      state.macintoshAssetsCount = action.payload.filter(asset => asset.Machine_Manufacturer === 'Macintosh').length;
+    
     },
   },
   extraReducers: (builder) => {
@@ -151,8 +130,7 @@ const assetSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        console.log(action.payload);
-        state.assets.push(action.payload); 
+        state.assets.push(action.payload);
         toast.success("Asset added successfully");
       })
       .addCase(createAsset.rejected, (state, action) => {
@@ -168,7 +146,6 @@ const assetSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        console.log(action.payload);
         state.assets = action.payload;
       })
       .addCase(getAssets.rejected, (state, action) => {
@@ -184,7 +161,7 @@ const assetSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        toast.success("Asset deleted successfully"); 
+        toast.success("Asset deleted successfully");
       })
       .addCase(deleteAsset.rejected, (state, action) => {
         state.isLoading = false;
@@ -207,15 +184,31 @@ const assetSlice = createSlice({
         state.message = action.payload;
         toast.error(action.payload);
       })
+      .addCase(updateAsset.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateAsset.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        toast.success("Product updated successfully");
+      })
+      .addCase(updateAsset.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      });
   },
+  
 });
 
-export const {  CALC_OUTOFSTOCK, CALC_CATEGORY } =
-  assetSlice.actions;
+export const { CALC_WINDOWS_ASSETS, CALC_MACINTOSH_ASSETS } = assetSlice.actions;
 
 export const selectIsLoading = (state) => state.asset.isLoading;
 export const selectAsset = (state) => state.asset.asset;
-export const selectOutOfStock = (state) => state.asset.outOfStock;
-export const selectCategory = (state) => state.asset.category;
+
+export const selectWindowsAssetsCount = (state) => state.asset.windowsAssetsCount;
+export const selectMacintoshAssetsCount = (state) => state.asset.macintoshAssetsCount;
 
 export default assetSlice.reducer;

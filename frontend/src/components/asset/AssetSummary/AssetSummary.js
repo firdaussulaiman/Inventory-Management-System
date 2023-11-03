@@ -6,10 +6,10 @@ import { BiCategory } from "react-icons/bi";
 import InfoBox from "../../infoBox/InfoBox";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  CALC_CATEGORY,
-  CALC_OUTOFSTOCK,
-  selectCategory,
-  selectOutOfStock,
+  CALC_WINDOWS_ASSETS,
+  CALC_MACINTOSH_ASSETS,
+  selectWindowsAssetsCount,
+  selectMacintoshAssetsCount,
 
 } from "../../../redux/features/asset/assetSlice";
 
@@ -22,12 +22,12 @@ const outOfStockIcon = <BsCartX size={40} color="#fff" />;
 
 const AssetSummary = ({ assets }) => {
   const dispatch = useDispatch();
-  const outOfStock = useSelector(selectOutOfStock);
-  const category = useSelector(selectCategory);
+  const windowsAssetsCount = useSelector(selectWindowsAssetsCount);
+  const macintoshAssetsCount = useSelector(selectMacintoshAssetsCount);
 
   useEffect(() => {
-    dispatch(CALC_OUTOFSTOCK(assets));
-    dispatch(CALC_CATEGORY(assets));
+    dispatch(CALC_WINDOWS_ASSETS(assets));
+    dispatch(CALC_MACINTOSH_ASSETS(assets));
   }, [dispatch, assets]);
 
   return (
@@ -36,20 +36,20 @@ const AssetSummary = ({ assets }) => {
       <div className="info-summary">
         <InfoBox
           icon={assetIcon}
-          title={"Total Assigned Assets"}
+          title={"Total Assets"}
           count={assets.length}
           bgColor="card1"
         />
         <InfoBox
           icon={outOfStockIcon}
-          title={"Total Lease Assets"}
-          count={outOfStock}
+          title={"Total Windows Assets"}
+          count={windowsAssetsCount}
           bgColor="card3"
         />
         <InfoBox
           icon={categoryIcon}
-          title={"Total Loan Assets"}
-          count={category.length}
+          title={"Total Macintosh Assets"}
+          count={macintoshAssetsCount}
           bgColor="card4"
         />
       </div>

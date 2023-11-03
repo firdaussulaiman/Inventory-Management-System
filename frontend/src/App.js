@@ -20,6 +20,9 @@ import EditAsset from "./pages/editasset/Editasset"; // Changed EditProduct to E
 import Profile from "./pages/profile/Profile";
 import EditProfile from "./pages/profile/EditProfile";
 import Contact from "./pages/contact/Contact";
+import AssetAssignedList from "./components/asset/AssetStatus/AssetAssigned/AssetAssignedList";
+import AssetLeaseList from "./components/asset/AssetStatus/AssetLease/AssetLeaseList";
+import AssetLoanList from "./components/asset/AssetStatus/AssetLoan/AssetLoanList";
 
 axios.defaults.withCredentials = true;
 
@@ -43,6 +46,9 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/resetpassword/:resetToken" element={<Reset />} />
+        <Route path="/assetsAssigned" element={<Sidebar> <Layout><AssetAssignedList /></Layout></Sidebar>} />
+        <Route path="/assetsLease" element={<Sidebar> <Layout><AssetLeaseList /></Layout></Sidebar>} />
+        <Route path="/assetsLoan" element={<Sidebar> <Layout><AssetLoanList /></Layout></Sidebar>} />
 
         <Route
           path="/dashboard"

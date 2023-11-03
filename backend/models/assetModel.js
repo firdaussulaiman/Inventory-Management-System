@@ -2,11 +2,7 @@ const mongoose = require("mongoose");
 
 const assetSchema = mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "User",
-    },
+
     Machine_Name: {
       type: String,
       required: [true, "Please add a name"],
@@ -38,14 +34,21 @@ const assetSchema = mongoose.Schema(
       trim: true,
     },
     Warranty_Date: {
-      type: Date, 
+      type: Date,
       required: [true, "Please add a warranty date"],
     },
+
+    Status: {
+      type: String,
+      required: [true, "Please add a status for the asset"],
+      enum: ['assigned', 'lease', 'retired', 'loan'],
+      default: 'assigned', 
+    }
   },
   {
     timestamps: true,
   }
 );
 
-const Asset = mongoose.model("Asset", assetSchema); // Changed "Product" to "Asset"
+const Asset = mongoose.model("Asset", assetSchema);
 module.exports = Asset;

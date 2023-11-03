@@ -4,13 +4,13 @@ const Asset = require("../models/assetModel");
 
 // Create Asset
 const createAsset = asyncHandler(async (req, res) => { 
-  const { Machine_Name, Machine_Type, Serial_Number, Machine_Manufacturer, Machine_Mac_Address, User_Assigned, Warranty_Date } = req.body;
+  const { Machine_Name, Machine_Type, Serial_Number, Machine_Manufacturer, Machine_Mac_Address, User_Assigned, Warranty_Date, Status } = req.body;
 
+  console.log(req.body);
   // Validation
-  if (!Machine_Name || !Machine_Type || !Serial_Number || !Machine_Manufacturer || !Machine_Mac_Address || !User_Assigned || !Warranty_Date) {
+  if (!Machine_Name || !Machine_Type || !Serial_Number || !Machine_Manufacturer || !Machine_Mac_Address || !User_Assigned || !Warranty_Date || !Status) {
     res.status(400);
-    throw new Error("Machine_Name, Machine_Type, Serial_Number, Machine_Manufacturer, Machine_Mac_Address, User_Assigned, and Warranty_Date are required fields.");
-
+    throw new Error("All fields including 'Status' are required.");
   }
   console.log(req.body);
 
@@ -24,6 +24,7 @@ const createAsset = asyncHandler(async (req, res) => {
     Machine_Mac_Address,
     User_Assigned,
     Warranty_Date,
+    Status
   });
 
   res.status(201).json(asset); 
@@ -70,11 +71,10 @@ const deleteAsset = asyncHandler(async (req, res) => {
 
 // Update Asset
 const updateAsset = asyncHandler(async (req, res) => {
-  const { Machine_Name, Machine_Type, Serial_Number, Machine_Manufacturer, Machine_Mac_Address, User_Assigned, Warranty_Date } = req.body;
+  const { Machine_Name, Machine_Type, Serial_Number, Machine_Manufacturer, Machine_Mac_Address, User_Assigned, Warranty_Date, Status } = req.body;
   const { id } = req.params;
 
-  const asset = await Asset.findById(id); 
-
+  const asset = await Asset.findById(id);
 
   if (!asset) {
     res.status(404);
@@ -86,24 +86,16 @@ const updateAsset = asyncHandler(async (req, res) => {
     throw new Error("User not authorized");
   }
 
-
+  if (Status && !['assigned', 'lease', 'retired', 'loan'].includes(Status)) {
+    res.status(400);
+    throw new Error("Invalid 'Status' value. It must be one of 'assigned', 'lease', 'retired', 'loan'.");
+  }
 
   // Update Asset
   const updatedAsset = await Asset.findByIdAndUpdate(
-    { _id: id },
-    {
-      Machine_Name,
-      Machine_Type,
-      Serial_Number,
-      Machine_Manufacturer,
-      Machine_Mac_Address,
-      User_Assigned,
-      Warranty_Date,
-    },
-    {
-      new: true,
-      runValidators: true,
-    }
+    id,
+    { $set: { Machine_Name, Machine_Type, Serial_Number, Machine_Manufacturer, Machine_Mac_Address, User_Assigned, Warranty_Date, Status } },
+    { new: true, runValidators: true }
   );
 
   res.status(200).json(updatedAsset);

@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import Card from "../../components/card/Card";
-import Loader from "../../components/loader/Loader";
-import { selectUser } from "../../redux/features/auth/authSlice";
-import "./Profile.scss";
-import { toast } from "react-toastify";
-import { updateUser } from "../../services/authService";
-import ChangePassword from "../../components/changePassword/ChangePassword";
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { selectUser } from '../../redux/features/auth/authSlice';
+import { toast } from 'react-toastify';
+import { updateUser } from '../../services/authService';
+import ChangePassword from '../../components/changePassword/ChangePassword';
+import { 
+  Card, 
+  CardContent, 
+  TextField, 
+  Button, 
+  CircularProgress, 
+  Typography 
+} from '@mui/material';
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -25,75 +30,80 @@ const EditProfile = () => {
     name: user?.name,
     email: user?.email,
     phone: user?.phone,
-
   };
+
   const [profile, setProfile] = useState(initialState);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
     setProfile({ ...profile, [name]: value });
   };
 
-  const saveProfile = async (e) => {
-    e.preventDefault();
+  const saveProfile = async (event) => {
+    event.preventDefault();
     setIsLoading(true);
     try {
-      // Save Profile
       const formData = {
         name: profile.name,
         phone: profile.phone,
-
       };
 
       const data = await updateUser(formData);
-      console.log(data);
       toast.success("User updated");
       navigate("/profile");
-      setIsLoading(false);
     } catch (error) {
-      console.log(error);
-      setIsLoading(false);
       toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="profile --my2">
-      {isLoading && <Loader />}
-
-      <Card cardClass={"card --flex-dir-column"}>
-        <form className="--form-control --m" onSubmit={saveProfile}>
-          <span className="profile-data">
-            <p>
-              <label>Name:</label>
-              <input
-                type="text"
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <Card sx={{ maxWidth: 345, flexDirection: 'column' }}>
+          <CardContent>
+            <form onSubmit={saveProfile}>
+              <TextField
+                fullWidth
+                label="Name"
+                variant="outlined"
                 name="name"
-                value={profile?.name}
+                value={profile.name || ''}
                 onChange={handleInputChange}
+                margin="normal"
               />
-            </p>
-            <p>
-              <label>Email:</label>
-              <input type="text" name="email" value={profile?.email} disabled />
-              <br />
-              <code>Email cannot be changed.</code>
-            </p>
-            <p>
-              <label>Phone:</label>
-              <input
-                type="text"
+              <TextField
+                fullWidth
+                label="Email"
+                variant="outlined"
+                name="email"
+                value={profile.email || ''}
+                onChange={handleInputChange}
+                margin="normal"
+                disabled
+              />
+              <Typography variant="caption" display="block">
+                Email cannot be changed.
+              </Typography>
+              <TextField
+                fullWidth
+                label="Phone"
+                variant="outlined"
                 name="phone"
-                value={profile?.phone}
+                value={profile.phone || ''}
                 onChange={handleInputChange}
+                margin="normal"
               />
-            </p>
-            <div>
-              <button className="--btn --btn-primary">Edit Profile</button>
-            </div>
-          </span>
-        </form>
-      </Card>
+              <Button variant="contained" color="primary" type="submit">
+                Save Profile
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      )}
       <br />
       <ChangePassword />
     </div>

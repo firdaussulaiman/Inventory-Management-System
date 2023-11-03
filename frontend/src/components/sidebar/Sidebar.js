@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import "./Sidebar.scss";
-import { HiMenuAlt3 } from "react-icons/hi";
+import { Drawer, IconButton, List, Toolbar } from "@mui/material";
 import { BsGear } from "react-icons/bs";
-import menu from "../../data/sidebar";
-import SidebarItem from "./SidebarItem";
+import { HiMenuAlt3 } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
+import SidebarItem from "./SidebarItem";
+import menu from "../../data/sidebar";
+
+const drawerWidth = 240;
 
 const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -16,30 +18,40 @@ const Sidebar = ({ children }) => {
   };
 
   return (
-    <div className="layout">
-      <div className="topbar">
-        <div className="top_section">
-          <div className="logo" onClick={goHome}>
+    <div>
+      <Drawer
+        variant="persistent"
+        anchor="left"
+        open={isOpen}
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+          },
+        }}
+      >
+        <Toolbar>
+          <IconButton onClick={goHome}>
             <BsGear size={35} />
-          </div>
-
-          <div className="menu_items">
-            {menu.map((item, index) => {
-              return <SidebarItem key={index} item={item} isOpen={isOpen} />;
-            })}
-          </div>
-          
-          <div className="bars">
-            <HiMenuAlt3 onClick={toggle} />
-          </div>
-        </div>
-      </div>
-
-      <main>
+          </IconButton>
+          <IconButton onClick={toggle}>
+            <HiMenuAlt3 />
+          </IconButton>
+        </Toolbar>
+        <List>
+          {menu.map((item, index) => (
+            <SidebarItem key={index} item={item} isOpen={isOpen} />
+          ))}
+        </List>
+      </Drawer>
+      <main style={{ marginLeft: isOpen ? drawerWidth : 0 }}>
         {children}
       </main>
+      
     </div>
-);
+  );
 };
 
 export default Sidebar;

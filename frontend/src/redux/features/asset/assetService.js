@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-const API_URL = `${BACKEND_URL}/api/assets/`; // Change "products" to "assets"
+const API_URL = `${BACKEND_URL}/api/assets/`; 
 
 const createAsset = async (assetData) => {
   const response = await axios.post(API_URL, assetData, {
@@ -33,8 +33,13 @@ const getAsset = async (id) => {
 };
 
 // Update Asset
-const updateAsset = async (id, formData) => {
-  const response = await axios.patch(`${API_URL}${id}`, formData);
+const updateAsset = async (id, assetData) => {
+  const response = await axios.patch(`${API_URL}${id}`, assetData, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  console.log("Update asset response: ", response.data); // Log the response from update
   return response.data;
 };
 

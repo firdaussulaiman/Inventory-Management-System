@@ -1,19 +1,25 @@
-.product-list {
-  color: #333;
-  .table {
-    padding: 5px;
-    width: 100%;
-    overflow-x: auto;
+.asset-list {
+  color: #CED7D7;
+  width: 122%;
+  box-sizing: border-box;
+  font-size: 16px;
+  .table-header {
+    font-size: px;
+    font-weight: bold;
+    .MuiDataGrid-cell {
+      font-size: 16px;
+    }
+
+  color: #CED7D7;
 
     .search {
-      width: 100%;
-      max-width: 300px;
+      width: 125%;
     }
 
     table {
       border-collapse: collapse;
       width: 100%;
-      font-size: 1.4rem;
+      font-size: 50px;
       color: #000;
 
       thead {
@@ -22,19 +28,26 @@
       }
 
       th {
-        border: 1px solid #eee;
+        border: 20px solid #eee;
       }
+
 
       th,
       td {
         vertical-align: top;
         text-align: left;
         padding: 8px;
+        font-size: 30px;
 
         &.icons {
           display: flex;
           justify-content: flex-start;
           align-items: center;
+          vertical-align: middle;
+          flex-wrap: wrap;    
+          
+
+
           > * {
             margin-right: 7px;
             cursor: pointer;
@@ -51,12 +64,15 @@
       tr:nth-child(even) {
         background-color: #fff;
       }
+      
       tbody {
         tr:hover {
           cursor: pointer;
           background-color: rgba(31, 147, 255, 0.3);
         }
+
       }
     }
   }
 }
+

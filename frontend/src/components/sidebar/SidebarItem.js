@@ -1,64 +1,61 @@
 import React, { useState } from "react";
-import { MdKeyboardArrowRight } from "react-icons/md";
+import { List, ListItem, ListItemIcon, ListItemText, Collapse } from "@mui/material";
+import { MdKeyboardArrowRight, MdKeyboardArrowDown } from "react-icons/md";
 import { NavLink } from "react-router-dom";
-import "./Sidebar.scss";
+import { styled } from '@mui/material/styles';
 
-const activeLink = ({ isActive }) => (isActive ? "active" : "link");
-const activeSublink = ({ isActive }) => (isActive ? "active" : "link");
+const LinkBehavior = React.forwardRef((props, ref) => (
+  <NavLink ref={ref} {...props} />
+));
+
+const StyledNavLink = styled(NavLink)(({ theme }) => ({
+  textDecoration: 'none',
+  color: 'inherit',
+  fontSize: '1.9em',
+  '&.active': {
+    color: theme.palette.primary.main,
+  },
+}));
 
 const SidebarItem = ({ item, isOpen }) => {
   const [expandMenu, setExpandMenu] = useState(false);
 
   if (item.childrens) {
     return (
-      <div
-        className={
-          expandMenu ? "sidebar-item s-parent open" : "sidebar-item s-parent"
-        }
-      >
-        <div className="sidebar-title">
-          <span>
-            {item.icon && <div className="icon">{item.icon}</div>}
-            {isOpen && <div>{item.title}</div>}
-          </span>
-          <MdKeyboardArrowRight
-            size={25}
-            className="arrow-icon"
-            onClick={() => setExpandMenu(!expandMenu)}
-          />
-        </div>
-        <div className="sidebar-content">
-          {item.childrens.map((child, index) => {
-            return (
-              <div key={index} className="s-child">
-                <NavLink to={child.path} className={activeSublink}>
-                  <div className="sidebar-item">
-                    <div className="sidebar-title">
-                      <span>
-                        {child.icon && <div className="icon">{child.icon}</div>}
-                        {isOpen && <div>{child.title}</div>}
-                      </span>
-                    </div>
-                  </div>
-                </NavLink>
-              </div>
-            );
-          })}
-        </div>
+      <div>
+        <ListItem button onClick={() => setExpandMenu(!expandMenu)}>
+          <ListItemIcon>
+            {item.icon}
+          </ListItemIcon>
+          {isOpen && <ListItemText primary={item.title} />}
+          {expandMenu ? <MdKeyboardArrowDown /> : <MdKeyboardArrowRight />}
+        </ListItem>
+        <Collapse in={expandMenu} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {item.childrens.map((child, index) => (
+              <StyledNavLink to={child.path} key={index}>
+                <ListItem button>
+                  <ListItemIcon>
+                    {child.icon}
+                  </ListItemIcon>
+                  {isOpen && <ListItemText primary={child.title} />}
+                </ListItem>
+              </StyledNavLink>
+            ))}
+          </List>
+        </Collapse>
       </div>
     );
   } else {
     return (
-      <NavLink to={item.path} className={activeLink}>
-        <div className="sidebar-item s-parent">
-          <div className="sidebar-title">
-            <span>
-              {item.icon && <div className="icon">{item.icon}</div>}
-              {isOpen && <div>{item.title}</div>}
-            </span>
-          </div>
-        </div>
-      </NavLink>
+      <StyledNavLink to={item.path}>
+        <ListItem button>
+          <ListItemIcon>
+            {item.icon}
+          </ListItemIcon>
+          {isOpen && <ListItemText primary={item.title} />}
+        </ListItem>
+      </StyledNavLink>
     );
   }
 };

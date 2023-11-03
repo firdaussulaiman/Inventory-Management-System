@@ -24,18 +24,19 @@ const AssetList = ({ assets, isLoading }) => {
   const dispatch = useDispatch();
 
   const columns = [
-    { field: 'index', headerName: '#', width: 70 },
-    { field: 'Machine_Name', headerName: 'Machine Name', width: 130 },
-    { field: 'Machine_Type', headerName: 'Machine Type', width: 130 },
+    { field: 'index', headerName: '#', width: 150 },
+    { field: 'Machine_Name', headerName: 'Machine Name', width: 150 },
+    { field: 'Machine_Type', headerName: 'Machine Type', width: 150 },
     { field: 'Serial_Number', headerName: 'Serial Number', width: 130 },
     { field: 'Machine_Manufacturer', headerName: 'Machine Manufacturer', width: 170 },
     { field: 'Machine_Mac_Address', headerName: 'Machine MAC Address', width: 170 },
     { field: 'User_Assigned', headerName: 'User Assigned', width: 130 },
     { field: 'Warranty_Date', headerName: 'Warranty Date', width: 130 },
+    { field: 'Status', headerName: 'Status', width: 150 },
     { 
       field: 'actions', 
       headerName: 'Actions', 
-      width: 200, 
+      width: 100, 
       renderCell: (params) => (
         <>
           <Link to={`/asset-detail/${params.row._id}`}>
@@ -62,14 +63,14 @@ const AssetList = ({ assets, isLoading }) => {
   const confirmDelete = (id) => {
     confirmAlert({
       title: "Delete Asset",
-      message: "Are you sure you want to delete this asset.",
+      message: "Are you sure you want to delete this asset?",
       buttons: [
         {
-          label: "Delete",
+          label: "Yes",
           onClick: () => delAsset(id),
         },
         {
-          label: "Cancel",
+          label: "No",
         },
       ],
     });
@@ -95,18 +96,36 @@ const AssetList = ({ assets, isLoading }) => {
       {!isLoading && assets.length === 0 ? (
         <p>-- No asset found, please add an asset...</p>
       ) : (
-        <div style={{ height: 400, width: '100%' }}>
+        <div style={{ height: 500, width: '100%' }}>
           <DataGrid 
-            rows={filteredAssets.map((asset, index) => ({ ...asset, index: index + 1 }))}
+            rows={filteredAssets.map((asset, index) => ({ ...asset, index: index +1 }))}
             columns={columns} 
             getRowId={(row) => row._id}
             initialState={{
               pagination: {
-                paginationModel: { page: 0, pageSize: 5 },
+                paginationModel: { page: 0, pageSize: 10 },
               },
             }}
             pageSizeOptions={[5, 10]}
             checkboxSelection
+            sx={{
+              '& .MuiDataGrid-cell': {
+                fontSize: '1.3rem', 
+                borderRight: '3px solid #fff',
+              },
+              '& .MuiDataGrid-columnSeparator': {
+                display: 'none',
+              },
+              '& .MuiDataGrid-columnHeaders': {
+                fontSize: '1.6rem', 
+                borderRight: '3px solid #fff', 
+              },
+              '& .MuiDataGrid-row': {
+                '&:last-child .MuiDataGrid-cell': {
+                  borderRight: 'none',
+                },
+              },
+            }}
           />
         </div>
       )}

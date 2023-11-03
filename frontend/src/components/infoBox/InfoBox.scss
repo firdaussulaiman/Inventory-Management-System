@@ -1,7 +1,9 @@
+
+
 .info-box {
   width: 100%;
-  height: 7rem;
-  max-width: 22rem;
+  height: 10rem;
+  max-width: 30rem;
   margin-right: 1rem;
   margin-bottom: 1rem;
   display: flex;
@@ -9,32 +11,24 @@
   align-items: center;
   vertical-align: middle;
   flex-wrap: wrap;
-  color: #fff;
+  color: #050606;
   transform: translateY(0);
   transition: all 0.3s;
 
-  // background-color: green;
 
   &:hover {
-    cursor: pointer;
-    // border: 3px solid #fff;
+    cursor: pointer;;
     transform: translateY(-5px);
   }
 
   .info-icon {
     padding: 0 2rem;
-    color: #fff;
+    color: #050606
   }
   .info-text > * {
-    color: #fff;
+    color: #050606;
   }
 
-  // .card {
-  //   border: 1px solid #ccc;
-  //   border-bottom: 3px solid var(--light-blue);
-  //   padding: 5px;
-  //   background-color: #f5f6fa;
-  // }
 }
 
 @media screen and (max-width: 600px) {

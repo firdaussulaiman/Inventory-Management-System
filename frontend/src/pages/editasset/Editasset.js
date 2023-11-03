@@ -13,62 +13,60 @@ import {
 
 const EditAsset = () => {
   const { id } = useParams();
+  console.log("Asset ID: ", id); // Log the asset ID
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isLoading = useSelector(selectIsLoading);
-
   const assetEdit = useSelector(selectAsset);
+  const [asset, setAsset] = useState(assetEdit || {});
 
-  const [asset, setAsset] = useState(assetEdit);
-  const [assetImage, setAssetImage] = useState("");
-  const [imagePreview, setImagePreview] = useState(null);
-  const [description, setDescription] = useState("");
-
+  // Fetch the asset on mount and when the id changes
   useEffect(() => {
-    dispatch(getAsset(id));
+    if (id) {
+      console.log("Dispatching getAsset with ID: ", id); // Log before dispatch
+      dispatch(getAsset(id));
+    }
   }, [dispatch, id]);
 
+  // Update local state when assetEdit changes
   useEffect(() => {
-    setAsset(assetEdit);
-
-    setImagePreview(
-      assetEdit && assetEdit.image ? `${assetEdit.image.filePath}` : null
-    );
-
-    setDescription(
-      assetEdit && assetEdit.description ? assetEdit.description : ""
-    );
+    console.log("Asset fetched for edit: ", assetEdit); // Log the fetched asset
+    if (assetEdit) {
+      setAsset(assetEdit);
+    }
   }, [assetEdit]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setAsset({ ...asset, [name]: value });
-  };
-
-  const handleImageChange = (e) => {
-    setAssetImage(e.target.files[0]);
-    setImagePreview(URL.createObjectURL(e.target.files[0]));
+    console.log(`Input changed: ${name} = `, value); // Log the input change
+    setAsset((prev) => {
+      const updatedAsset = { ...prev, [name]: value };
+      console.log("Updated asset state: ", updatedAsset); // Log the updated asset state
+      return updatedAsset;
+    });
   };
 
   const saveAsset = async (e) => {
     e.preventDefault();
+    console.log("Saving asset with state: ", asset); // Log before saving asset
     const formData = new FormData();
-    
-    formData.append("Machine_Name", asset?.Machine_Name);
-    formData.append("Machine_Type", asset?.Machine_Type);
-    formData.append("Serial_Number", asset?.Serial_Number);
-    formData.append("Machine_Manufacturer", asset?.Machine_Manufacturer);
-    formData.append("Machine_Mac_Address", asset?.Machine_Mac_Address);
-    formData.append("User_Assigned", asset?.User_Assigned);
-    if(asset?.Warranty_Date) {
-      formData.append("Warranty_Date", asset?.Warranty_Date);
+
+    Object.entries(asset).forEach(([key, value]) => {
+      if (value != null) {
+        formData.append(key, value);
+      }
+    });
+
+    try {
+      const response = await dispatch(updateAsset({ id, formData }));
+      console.log("Update asset response: ", response); // Log the response from update
+      await dispatch(getAssets());
+      navigate("/dashboard");
+      console.log("Navigating to dashboard after asset update"); // Log after navigation
+    } catch (error) {
+      console.error("Update asset error: ", error); // Log if there is an error
     }
-
-    console.log(...formData);
-
-    await dispatch(updateAsset({ id, formData }));
-    await dispatch(getAssets());
-    navigate("/dashboard");
   };
 
   return (
@@ -77,12 +75,7 @@ const EditAsset = () => {
       <h3 className="--mt">Edit Asset</h3>
       <AssetForm
         asset={asset}
-        assetImage={assetImage}
-        imagePreview={imagePreview}
-        description={description}
-        setDescription={setDescription}
         handleInputChange={handleInputChange}
-        handleImageChange={handleImageChange}
         saveAsset={saveAsset}
       />
     </div>

@@ -8,7 +8,6 @@ import Card from "../../card/Card";
 import { SpinnerImg } from "../../loader/Loader";
 import "./AssetDetail.scss";
 
-
 const AssetDetail = () => {
   useRedirectLoggedOutUser("/login");
   const dispatch = useDispatch();
@@ -23,14 +22,19 @@ const AssetDetail = () => {
     if (isError) {
       console.log(message);
     }
-  }, [isLoggedIn, isError, message, dispatch]);
+  }, [isLoggedIn, isError, message, dispatch, id]); // Ensure 'id' is in the dependency array if it's being used in the effect
+
+  // Capitalize the first letter of the status
+  const formatStatus = (status) => {
+    return status.charAt(0).toUpperCase() + status.slice(1);
+  };
 
   return (
     <div className="asset-detail">
       <h3 className="--mt">Asset Detail</h3>
       <Card cardClass="card">
         {isLoading && <SpinnerImg />}
-        {asset && (
+        {!isLoading && asset && (
           <div className="detail">
             <h4><span className="badge">Machine Name: </span> &nbsp; {asset.Machine_Name}</h4>
             <p><b>&rarr; Machine Type : </b> {asset.Machine_Type}</p>
@@ -38,7 +42,8 @@ const AssetDetail = () => {
             <p><b>&rarr; Manufacturer : </b> {asset.Machine_Manufacturer}</p>
             <p><b>&rarr; MAC Address : </b> {asset.Machine_Mac_Address}</p>
             <p><b>&rarr; User Assigned : </b> {asset.User_Assigned}</p>
-            <p><b>&rarr; Warranty Date : </b> {new Date(asset.Warranty_Date).toLocaleString("en-US")}</p>
+            <p><b>&rarr; Warranty Date : </b> {new Date(asset.Warranty_Date).toLocaleDateString("en-US")}</p>
+            <p><b>&rarr; Status : </b> {formatStatus(asset.Status)}</p>
             <hr />
             <code className="--color-dark">Created on: {new Date(asset.createdAt).toLocaleString("en-US")}</code>
             <br />
